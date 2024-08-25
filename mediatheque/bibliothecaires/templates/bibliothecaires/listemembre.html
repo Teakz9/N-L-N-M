@@ -13,7 +13,8 @@
     <h1>Liste des membres.</h1>
     <ul>
         {% for membre in membres %}
-        <li>Nom : {{membre.nom}} - Prénom : {{membre.prenom}}</li>
+        <li>Nom : {{membre.nom}} - Prénom : {{membre.prenom}}
+            <a href="{% url 'modifier_membre' membre.id %}">Modifier</a></li>
         {% endfor %}
     </ul>
 </body>
