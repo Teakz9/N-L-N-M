@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des membres</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'bibliothecaires_index' %}">Accueil</a></li>
+        </ul>
+    </nav>
+    <h1>Liste des membres.</h1>
+    <ul>
+        {% for membre in membres %}
+        <li>Nom : {{membre.nom}} - Prénom : {{membre.prenom}}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

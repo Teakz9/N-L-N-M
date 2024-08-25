@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un emprunteur</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'bibliothecaires_index' %}">Accueil</a></li>
+        </ul>
+    </nav>
+    <h1>Ajouter un membre.</h1>
+    <form action="" method="post" novalidate>
+        {% csrf_token %}
+        {{creationMembre}}
+        <input type="submit" value="Envoyer">
+    </form>
+</body>
+</html>

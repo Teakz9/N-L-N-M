@@ -1,3 +1,6 @@
 from django.db import models
 
-# Create your models here.
+
+class Membre(models.Model):
+    nom = models.CharField(max_length=150)
+    prenom = models.CharField(max_length=150)
