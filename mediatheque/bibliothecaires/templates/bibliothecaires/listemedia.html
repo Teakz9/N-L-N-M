@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Nos médias</title>
+</head>
+<body>
+    <h1>Liste des médias !</h1>
+
+    {% for type, media_list in medias_by_type.items %}
+        <h2>{{type}}</h2>
+        <ul>
+            {% for media in media_list %}
+                <li>{{media.titre}} - {{media.auteur}}</li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+</body>
+</html>

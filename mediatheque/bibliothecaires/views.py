@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from .forms import Creationmembre, Modifiermembre
-from .models import Membre
+from .models import Membre, Media
 
 
 def index(request):
@@ -47,3 +47,15 @@ def modifiermembre(request, id):
                       'bibliothecaires/modifiermembre.html',
                       {'modifiermembre': modifier_membre}
                       )
+
+
+def liste_media(request):
+    medias = Media.objects.all()
+    medias_by_type = {}
+
+    for media in medias:
+        if media.type not in medias_by_type:
+            medias_by_type[media.type] = []
+        medias_by_type[media.type].append(media)
+
+    return render(request, 'bibliothecaires/listemedia.html', {'medias_by_type': medias_by_type})
