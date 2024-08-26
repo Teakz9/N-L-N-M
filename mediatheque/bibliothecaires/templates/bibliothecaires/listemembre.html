@@ -18,6 +18,13 @@
             <span> - </span>
             <a href="{% url 'supprimer_membre' membre.id %}">Supprimer</a>
         </li>
+        <ul>
+            {% for emprunt in membre.emprunt_set.all %}
+            <li>{{emprunt.media.titre}} ({{emprunt.media.type}}) - Emprunté le {{emprunt.date_emprunt|date:"d/m/y"}}</li>
+            {% empty %}
+            <li>Aucun emprunt</li>
+            {% endfor %}
+        </ul>
         {% endfor %}
     </ul>
 </body>

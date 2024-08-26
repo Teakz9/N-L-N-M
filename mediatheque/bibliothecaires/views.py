@@ -1,19 +1,19 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from .forms import Creationmembre, Modifiermembre, Creationmedia, Creationjeudeplateau
-from .models import Membre, Media, JeuDePlateau
+from .forms import Creationmembre, Modifiermembre, Creationmedia, Creationjeudeplateau, Empruntform
+from .models import Membre, Media, JeuDePlateau, Emprunt
 
 
 def index(request):
     return render(request, 'bibliothecaires/index.html')
 
 
-def listemembres(request):
-    membres = Membre.objects.all()
+def liste_membres(request):
+    membres = Membre.objects.all().prefetch_related('emprunt_set__media')
     return render(request, 'bibliothecaires/listemembre.html',
                   {'membres': membres})
 
 
-def ajoutmembre(request):
+def ajout_membre(request):
     if request.method == 'POST':
         creationmembre = Creationmembre(request.POST)
         if creationmembre.is_valid():
@@ -32,7 +32,7 @@ def ajoutmembre(request):
                       {'creationMembre': creationmembre})
 
 
-def modifiermembre(request, id):
+def modifier_membre(request, id):
     membre = get_object_or_404(Membre, pk=id)
     if request.method == 'POST':
         modifier_membre = Modifiermembre(request.POST, instance=membre)
@@ -49,7 +49,7 @@ def modifiermembre(request, id):
                       )
 
 
-def supprimermembre(request, id):
+def supprimer_membre(request, id):
     membre = get_object_or_404(Membre, pk=id)
     membre.delete()
     return redirect('liste_membre')
@@ -70,7 +70,7 @@ def liste_media(request):
         'jeux_de_plateau': jeux_de_plateau})
 
 
-def ajoutmedia(request):
+def ajout_media(request):
     if request.method == 'POST':
         media_form = Creationmedia(request.POST)
         jeu_form = Creationjeudeplateau(request.POST)
@@ -90,3 +90,19 @@ def ajoutmedia(request):
         'media_form': media_form,
         'jeu_form': jeu_form,
     })
+
+
+def creer_emprunt(request):
+    if request.method == 'POST':
+        form = Empruntform(request.POST)
+        if form.is_valid():
+            emprunt = form.save(commit=False)
+            media = emprunt.media
+            media.disponible = False
+            media.save()
+            emprunt.save()
+            return redirect('liste_membre')
+    else:
+        form = Empruntform()
+    return render (request, 'bibliothecaires/creeremprunt.html',
+                   {'form': form})

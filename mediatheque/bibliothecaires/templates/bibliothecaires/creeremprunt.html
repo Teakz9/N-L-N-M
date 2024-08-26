@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Créer un emprunt</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'bibliothecaires_index' %}">Accueil</a></li>
+        </ul>
+    </nav>
+    <h1>Créer un emprunt !</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit">Créer l'emprunt</button>
+    </form>
+</body>
+</html>

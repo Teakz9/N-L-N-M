@@ -16,7 +16,15 @@
         <h2>{{type}}</h2>
         <ul>
             {% for media in media_list %}
-                <li>{{media.titre}} - {{media.auteur}}</li>
+                <li>
+                    {{media.titre}} - {{media.auteur}}
+                    {% if media.disponible %}
+                        <span style="color: green">(Disponible)</span>
+                    {% else %}
+                        <span style="color: red">(Indisponible)</span>
+                    {% endif %}
+                </li>
+
             {% endfor %}
         </ul>
     {% endfor %}
