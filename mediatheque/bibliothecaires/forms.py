@@ -1,5 +1,5 @@
 from django import forms
-from .models import Membre, Media
+from .models import Membre, Media, JeuDePlateau
 
 
 class Creationmembre(forms.Form):
@@ -17,3 +17,9 @@ class Creationmedia(forms.ModelForm):
     class Meta:
         model = Media
         fields = ['titre', 'auteur', 'type', 'disponible']
+
+
+class Creationjeudeplateau(forms.ModelForm):
+    class Meta:
+        model = JeuDePlateau
+        fields = ['nom', 'auteur']

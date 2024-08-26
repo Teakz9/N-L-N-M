@@ -11,10 +11,14 @@ class Media(models.Model):
         ('Livre', 'Livre'),
         ('CD', 'CD'),
         ('DVD', 'DVD'),
-        ('Jeu de plateau', 'Jeu de plateau'),
     ]
 
     titre = models.CharField(max_length=150)
     auteur = models.CharField(max_length=150)
     type = models.CharField(max_length=50, choices=TYPE_CHOICES)
     disponible = models.BooleanField(default=True)
+
+
+class JeuDePlateau(models.Model):
+    nom = models.CharField(max_length=150)
+    auteur = models.CharField(max_length=150)

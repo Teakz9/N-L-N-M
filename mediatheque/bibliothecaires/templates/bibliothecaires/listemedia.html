@@ -20,5 +20,11 @@
             {% endfor %}
         </ul>
     {% endfor %}
+    <h2>Jeux de Plateau</h2>
+    <ul>
+        {% for jeu in jeux_de_plateau %}
+            <li>{{jeu.nom}} - {{jeu.auteur}}</li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
