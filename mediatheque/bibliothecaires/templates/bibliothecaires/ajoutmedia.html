@@ -5,6 +5,16 @@
     <title>Ajouter un média</title>
 </head>
 <body>
-    <h1>Ajouter un média</h1>
+    <nav>
+        <ul>
+            <li><a href="{% url 'bibliothecaires_index' %}">Accueil</a></li>
+        </ul>
+    </nav>
+    <h1>Ajouter un média.</h1>
+    <form action="" method="post" novalidate>
+        {% csrf_token %}
+        {{creationMedia.as_p}}
+        <input type="submit" value="Ajouter le média">
+    </form>
 </body>
 </html>

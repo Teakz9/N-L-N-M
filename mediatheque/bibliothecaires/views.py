@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render
-from .forms import Creationmembre, Modifiermembre
+from .forms import Creationmembre, Modifiermembre, Creationmedia
 from .models import Membre, Media
 
 
@@ -59,3 +59,18 @@ def liste_media(request):
         medias_by_type[media.type].append(media)
 
     return render(request, 'bibliothecaires/listemedia.html', {'medias_by_type': medias_by_type})
+
+
+def ajoutmedia(request):
+    if request.method == 'POST':
+        creationmedia = Creationmedia(request.POST)
+        if creationmedia.is_valid():
+            creationmedia.save()
+            return render(request,
+                          'bibliothecaires/ajoutmedia.html',
+                          {'creationMedia': creationmedia})
+    else:
+        creationmedia = Creationmedia()
+        return render(request,
+                      'bibliothecaires/ajoutmedia.html',
+                      {'creationMedia': creationmedia})

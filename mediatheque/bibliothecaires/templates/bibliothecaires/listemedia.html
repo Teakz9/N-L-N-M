@@ -5,6 +5,11 @@
     <title>Nos médias</title>
 </head>
 <body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'bibliothecaires_index' %}">Accueil</a></li>
+        </ul>
+    </nav>
     <h1>Liste des médias !</h1>
 
     {% for type, media_list in medias_by_type.items %}

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Membre
+from .models import Membre, Media
 
 
 class Creationmembre(forms.Form):
@@ -11,3 +11,9 @@ class Modifiermembre(forms.ModelForm):
     class Meta:
         model = Membre
         fields = ['nom', 'prenom']
+
+
+class Creationmedia(forms.ModelForm):
+    class Meta:
+        model = Media
+        fields = ['titre', 'auteur', 'type', 'disponible']
