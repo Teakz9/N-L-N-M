@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib import messages
 from .forms import Creationmembre, Modifiermembre, Creationmedia, Creationjeudeplateau, Empruntform
 from .models import Membre, Media, JeuDePlateau, Emprunt
 
@@ -97,12 +98,20 @@ def creer_emprunt(request):
         form = Empruntform(request.POST)
         if form.is_valid():
             emprunt = form.save(commit=False)
+            membre = emprunt.membre
+
+            if membre.emprunt_set.filter(date_retour__isnull=True).count() >= 3:
+                messages.error(request, "Ce membre a déjà 3 emprunts actifs.")
+                return redirect('creer_emprunt')
+
             media = emprunt.media
             media.disponible = False
             media.save()
             emprunt.save()
+
+            messages.success(request, 'Emprunt validé.')
             return redirect('liste_membre')
     else:
         form = Empruntform()
-    return render (request, 'bibliothecaires/creeremprunt.html',
-                   {'form': form})
+
+    return render(request, 'bibliothecaires/creeremprunt.html', {'form': form})

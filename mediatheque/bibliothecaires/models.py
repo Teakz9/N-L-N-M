@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 
 class Membre(models.Model):
@@ -39,6 +40,14 @@ class Emprunt(models.Model):
     media = models.ForeignKey(Media, on_delete=models.CASCADE)
     date_emprunt = models.DateTimeField(default=timezone.now)
     date_retour = models.DateTimeField(null=True, blank=True)
+
+    def clean(self):
+        if self.membre.emprunt_set.filter(date_retour__isnull=True).count() >= 3:
+            raise ValidationError("Ce membre a déjà 3 emprunts actifs !")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.media.titre} emprunté par {self.membre.nom} {self.membre.prenom}"
