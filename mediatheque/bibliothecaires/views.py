@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
+from django.utils import timezone
+from datetime import timedelta
 from .forms import Creationmembre, Modifiermembre, Creationmedia, Creationjeudeplateau, Empruntform
 from .models import Membre, Media, JeuDePlateau, Emprunt
 
@@ -100,9 +102,17 @@ def creer_emprunt(request):
             emprunt = form.save(commit=False)
             membre = emprunt.membre
 
+            emprunts_retard = membre.emprunt_set.filter(date_retour__isnull=True,
+                                                        date_emprunt__lt=timezone.now() - timedelta(days=7))
+            if emprunts_retard.exists():
+                messages.error(request, "Ce membre a un ou plusieurs retards.")
+                return redirect('creer_emprunt')
+
             if membre.emprunt_set.filter(date_retour__isnull=True).count() >= 3:
                 messages.error(request, "Ce membre a déjà 3 emprunts actifs.")
                 return redirect('creer_emprunt')
+
+            emprunt.date_retour = emprunt.date_emprunt + timedelta(days=7)
 
             media = emprunt.media
             media.disponible = False
