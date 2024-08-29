@@ -5,7 +5,7 @@
     <title>Section Bibliothécaires</title>
 </head>
 <body>
-    <h1>Interface d'administration.</h1>
+    <h1>Bonjour, {{user.username}}.</h1>
     <ul>
         <li>
             <a href="{% url 'liste_membre' %}">Voir les membres.</a>
@@ -23,5 +23,6 @@
             <a href="{% url 'creer_emprunt' %}">Créer un emprunt.</a>
         </li>
     </ul>
+    <a href="{% url 'deconnexion' %}">Se déconnecter</a>
 </body>
 </html>

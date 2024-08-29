@@ -1,4 +1,6 @@
 from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
 from datetime import timedelta
@@ -6,8 +8,29 @@ from .forms import Creationmembre, Modifiermembre, Creationmedia, Creationjeudep
 from .models import Membre, Media, JeuDePlateau, Emprunt
 
 
+def connexion(request):
+    if request.method == 'POST':
+        username = request.POST['utilisateur']
+        password = request.POST['motdepasse']
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('bibliothecaires_index')
+        else:
+            messages.error(request, 'Identifiant ou mot de passe incorrect')
+
+    return render(request, 'bibliothecaires/connexion.html')
+
+
+@login_required
 def index(request):
     return render(request, 'bibliothecaires/index.html')
+
+
+def deconnexion(request):
+    logout(request)
+    return redirect('connexion')
 
 
 def liste_membres(request):
