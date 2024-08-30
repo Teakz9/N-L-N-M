@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des médias</title>
+</head>
+<body>
+    <h1>Notre liste de médias !</h1>
+    {% for type, media_list in medias_by_type.items %}
+        <h2>{{type}}</h2>
+        <ul>
+            {% for media in media_list %}
+                <li>
+                    {{media.titre}} - {{media.auteur}}
+                    {% if media.disponible %}
+                        <span style="color: green">(Disponible)</span>
+                    {% else %}
+                        <span style="color: red">(Indisponible)</span>
+                    {% endif %}
+                </li>
+
+            {% endfor %}
+        </ul>
+    {% endfor %}
+    <h2>Jeux de Plateau</h2>
+    <ul>
+        {% for jeu in jeux_de_plateau %}
+            <li>{{jeu.nom}} - {{jeu.auteur}}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

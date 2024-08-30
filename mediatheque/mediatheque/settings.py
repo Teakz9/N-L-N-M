@@ -128,3 +128,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'bibliothecaires_connexion'
 LOGIN_REDIRECT_URL = 'bibliothecaires_index'
 LOGOUT_REDIRECT_URL = 'bibliothecaires_connexion'
+
