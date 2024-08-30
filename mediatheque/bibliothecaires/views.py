@@ -1,3 +1,4 @@
+import logging
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -15,9 +16,11 @@ def connexion(request):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
+            logging.debug('Connexion réussie.')
             login(request, user)
             return redirect('bibliothecaires_index')
         else:
+            logging.warning('Connexion échouée.')
             messages.error(request, 'Identifiant ou mot de passe incorrect')
 
     return render(request, 'bibliothecaires/connexion.html')
@@ -43,6 +46,7 @@ def ajout_membre(request):
     if request.method == 'POST':
         creationmembre = Creationmembre(request.POST)
         if creationmembre.is_valid():
+            logging.debug('Formulaire de membre correctement rempli.')
             membre = Membre()
             membre.nom = creationmembre.cleaned_data['nom']
             membre.prenom = creationmembre.cleaned_data['prenom']
@@ -52,6 +56,7 @@ def ajout_membre(request):
                           'bibliothecaires/ajoutmembre.html',
                           {'creationMembre': creationmembre})
     else:
+        logging.warning('Formulaire de membre a échoué.')
         creationmembre = Creationmembre()
         return render(request,
                       'bibliothecaires/ajoutmembre.html',
@@ -63,11 +68,13 @@ def modifier_membre(request, id):
     if request.method == 'POST':
         modifier_membre = Modifiermembre(request.POST, instance=membre)
         if modifier_membre.is_valid():
+            logging.debug('La modification a fonctionnée.')
             modifier_membre.save()
             membres = Membre.objects.all()
             return render(request, 'bibliothecaires/listemembre.html',
                           {'membres': membres})
     else:
+        logging.warning('La modification a échouée.')
         modifier_membre = Modifiermembre(instance=membre)
         return render(request,
                       'bibliothecaires/modifiermembre.html',
@@ -86,6 +93,7 @@ def liste_media(request):
     jeux_de_plateau = JeuDePlateau.objects.all()
 
     medias_by_type = {}
+    logging.debug('Liste triée par type.')
     for media in medias:
         if media.type not in medias_by_type:
             medias_by_type[media.type] = []
@@ -102,6 +110,7 @@ def ajout_media(request):
         jeu_form = Creationjeudeplateau(request.POST)
 
         if media_form.is_valid():
+            logging.debug('Le média est valide.')
             media_form.save()
             return redirect('liste_media')
 
@@ -109,6 +118,7 @@ def ajout_media(request):
             jeu_form.save()
             return redirect('liste_media')
     else:
+        logging.warning('Le média est invalide.')
         media_form = Creationmedia()
         jeu_form = Creationjeudeplateau()
 
@@ -120,18 +130,22 @@ def ajout_media(request):
 
 def creer_emprunt(request):
     if request.method == 'POST':
+        logging.debug('Requête POST reçue pour créer un emprunt.')
         form = Empruntform(request.POST)
         if form.is_valid():
+            logging.debug('Formulaire pour emprunt valide.')
             emprunt = form.save(commit=False)
             membre = emprunt.membre
 
             emprunts_retard = membre.emprunt_set.filter(date_retour__isnull=True,
                                                         date_emprunt__lt=timezone.now() - timedelta(days=7))
             if emprunts_retard.exists():
+                logging.warning('Cet utilisateur a des retards.')
                 messages.error(request, "Ce membre a un ou plusieurs retards.")
                 return redirect('creer_emprunt')
 
             if membre.emprunt_set.filter(date_retour__isnull=True).count() >= 3:
+                logging.warning('Cet utilisateur a déjà 3 emprunts.')
                 messages.error(request, "Ce membre a déjà 3 emprunts actifs.")
                 return redirect('creer_emprunt')
 
@@ -142,6 +156,7 @@ def creer_emprunt(request):
             media.save()
             emprunt.save()
 
+            logging.info('Emprunt créé avec succès.')
             messages.success(request, 'Emprunt validé.')
             return redirect('liste_membre')
     else:
